@@ -19,6 +19,13 @@
             "email": "mail@andreass.net"
         }
     ],
+    "repositories" : [{
+	    "type" : "vcs",
+	    "url" : "https://github.com/raziel057/BeSimpleSoapCommon"
+    }, {
+	    "type" : "vcs",
+	    "url" : "https://github.com/raziel057/BeSimpleSoapWsdl"
+    }],
     "require": {
         "php": ">=5.3.0",
         "ext-soap": "*",
