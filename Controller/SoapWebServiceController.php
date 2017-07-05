@@ -24,6 +24,7 @@ use Symfony\Component\HttpKernel\Exception\FlattenException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\Log\DebugLoggerInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * @author Christian Kerl <christian-kerl@web.de>
@@ -93,7 +94,7 @@ class SoapWebServiceController extends Controller
             $this->container->get('router')->generate(
                 '_webservice_call',
                 array('webservice' => $webservice),
-                true
+                UrlGeneratorInterface::ABSOLUTE_URL
             )
         ));
 
