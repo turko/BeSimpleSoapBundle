@@ -26,7 +26,6 @@
         "besimple/soap-wsdl": "0.3.*",
         "ass/xmlsecurity": "~1.0",
         "symfony/framework-bundle": "~2.6|~3.0",
-        "symfony/twig-bundle": "~2.6|~3.0",
         "zendframework/zend-mime": "2.1.*"
     },
     "suggest": {
