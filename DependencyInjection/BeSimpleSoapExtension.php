@@ -21,6 +21,7 @@ use Symfony\Component\DependencyInjection\DefinitionDecorator;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
+use Symfony\Component\HttpKernel\Kernel;
 
 /**
  * BeSimpleSoapExtension.
@@ -80,7 +81,11 @@ class BeSimpleSoapExtension extends Extension
 
     private function registerClientConfiguration(array $config, ContainerBuilder $container, XmlFileLoader $loader)
     {
-        $loader->load('client.xml');
+        if (3 === Kernel::MAJOR_VERSION) {
+            $loader->load('client3.xml');
+        } else {
+            $loader->load('client.xml');
+        }
 
         foreach ($config as $client => $options) {
             $definition = new DefinitionDecorator('besimple.soap.client.builder');
@@ -92,7 +97,7 @@ class BeSimpleSoapExtension extends Extension
                     ->getDefinition('besimple.soap.client.builder')
                     ->getArgument(1);
 
-            foreach (array('cache_type', 'user_agent') as $key) {
+            foreach (array('cache_type', 'user_agent', 'options') as $key) {
                 if (isset($options[$key])) {
                     $defOptions[$key] = $options[$key];
                 }
@@ -115,8 +120,38 @@ class BeSimpleSoapExtension extends Extension
                 ));
             }
 
+            $authArray = $options['authentication'];
+            if (null !== $authArray) {
+                $type = $authArray['type'];
+                if ((null === $type || 'digest' == $type)
+                    && $authArray['local_cert']
+                ) {
+                    $definition->addMethodCall(
+                        'withBasicAuthentication',
+                        [
+                            $authArray['local_cert'],
+                            $authArray['password']
+                        ]
+                    );
+                } elseif ((null === $type || 'basic' == $type)
+                    && $authArray['login']
+                ) {
+                    $definition->addMethodCall(
+                        'withBasicAuthentication',
+                        [
+                            $authArray['login'],
+                            $authArray['password']
+                        ]
+                    );
+                }
+            }
+
             if (isset($defOptions['cache_type'])) {
                 $defOptions['cache_type'] = $this->getCacheType($defOptions['cache_type']);
+            }
+
+            if (isset($defOptions['options']['soap_version'])) {
+                $defOptions['options']['soap_version'] = $this->getSoapVersion($defOptions['options']['soap_version']);
             }
 
             $definition->replaceArgument(1, $defOptions);
@@ -147,10 +182,14 @@ class BeSimpleSoapExtension extends Extension
         $definition = new DefinitionDecorator('besimple.soap.client');
         $container->setDefinition(sprintf('besimple.soap.client.%s', $client), $definition);
 
-        $definition->setFactory(array(
-            new Reference(sprintf('besimple.soap.client.builder.%s', $client)),
-            'build'
-        ));
+        if (3 === Kernel::MAJOR_VERSION) {
+            $definition->setFactory(array(
+                new Reference(sprintf('besimple.soap.client.builder.%s', $client)),
+                'build'
+            ));
+        } else {
+            $definition->setFactoryService(sprintf('besimple.soap.client.builder.%s', $client));
+        }
     }
 
     private function createWebServiceContext(array $config, ContainerBuilder $container)
@@ -187,6 +226,18 @@ class BeSimpleSoapExtension extends Extension
 
             case 'disk_memory':
                 return Cache::TYPE_DISK_MEMORY;
+        }
+    }
+
+    private function getSoapVersion($version)
+    {
+        switch ($version) {
+
+            case 'soap_1_1':
+                return \SOAP_1_1;
+                break;
+            default:
+                return \SOAP_1_2;
         }
     }
 }
