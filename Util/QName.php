@@ -18,9 +18,10 @@ class QName
     private $namespace;
     private $name;
 
-    public static function isPrefixedQName($qname)
+    public function __construct($namespace, $name)
     {
-        return false !== strpos($qname, ':') ? true : false;
+        $this->namespace = $namespace;
+        $this->name = $name;
     }
 
     public static function fromPrefixedQName($qname, $resolveNamespacePrefixCallable)
@@ -32,6 +33,11 @@ class QName
         return new self(call_user_func($resolveNamespacePrefixCallable, $prefix), $name);
     }
 
+    public static function isPrefixedQName($qname)
+    {
+        return false !== strpos($qname, ':') ? true : false;
+    }
+
     public static function fromPackedQName($qname)
     {
         Assert::thatArgument('qname', preg_match('/^\{(.+)\}(.+)$/', $qname, $matches));
@@ -39,10 +45,9 @@ class QName
         return new self($matches[1], $matches[2]);
     }
 
-    public function __construct($namespace, $name)
+    public function __toString()
     {
-        $this->namespace = $namespace;
-        $this->name      = $name;
+        return sprintf('{%s}%s', $this->getNamespace(), $this->getName());
     }
 
     public function getNamespace()
@@ -53,10 +58,5 @@ class QName
     public function getName()
     {
         return $this->name;
-    }
-
-    public function __toString()
-    {
-        return sprintf('{%s}%s', $this->getNamespace(), $this->getName());
     }
 }

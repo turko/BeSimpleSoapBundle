@@ -23,14 +23,14 @@ class Method extends Configuration
         return $this->value;
     }
 
-    public function getService()
-    {
-        return $this->service;
-    }
-
     public function setValue($value)
     {
         $this->value = $value;
+    }
+
+    public function getService()
+    {
+        return $this->service;
     }
 
     public function setService($service)

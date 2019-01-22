@@ -17,17 +17,17 @@ namespace BeSimple\SoapBundle\Util;
 class Assert
 {
     const ARGUMENT_INVALID = 'Argument "%s" is invalid.';
-    const ARGUMENT_NULL    = 'Argument "%s" can not be null.';
-
-    public static function thatArgument($name, $condition, $message = self::ARGUMENT_INVALID)
-    {
-        if(!$condition) {
-            throw new \InvalidArgumentException(sprintf($message, $name));
-        }
-    }
+    const ARGUMENT_NULL = 'Argument "%s" can not be null.';
 
     public static function thatArgumentNotNull($name, $value)
     {
         self::thatArgument($name, null !== $value, self::ARGUMENT_NULL);
+    }
+
+    public static function thatArgument($name, $condition, $message = self::ARGUMENT_INVALID)
+    {
+        if (!$condition) {
+            throw new \InvalidArgumentException(sprintf($message, $name));
+        }
     }
 }

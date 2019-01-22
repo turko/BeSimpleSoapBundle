@@ -12,23 +12,14 @@ namespace BeSimple\SoapBundle\Util;
 
 class Collection implements \IteratorAggregate, \Countable
 {
-    private $elements = array();
+    private $elements = [];
     private $getter;
     private $class;
 
     public function __construct($getter, $class = null)
     {
         $this->getter = $getter;
-        $this->class  = $class;
-    }
-
-    public function add($element)
-    {
-        if ($this->class && !$element instanceof $this->class) {
-            throw new \InvalidArgumentException(sprintf('Cannot add class "%s" because it is not an instance of "%s"', get_class($element), $this->class));
-        }
-
-        $this->elements[$element->{$this->getter}()] = $element;
+        $this->class = $class;
     }
 
     public function addAll($elements)
@@ -38,9 +29,19 @@ class Collection implements \IteratorAggregate, \Countable
         }
     }
 
-    public function has($key)
+    public function add($element)
     {
-        return isset($this->elements[$key]);
+        if ($this->class && !$element instanceof $this->class) {
+            throw new \InvalidArgumentException(
+                sprintf(
+                    'Cannot add class "%s" because it is not an instance of "%s"',
+                    get_class($element),
+                    $this->class
+                )
+            );
+        }
+
+        $this->elements[$element->{$this->getter}()] = $element;
     }
 
     public function get($key)
@@ -48,9 +49,14 @@ class Collection implements \IteratorAggregate, \Countable
         return $this->has($key) ? $this->elements[$key] : null;
     }
 
+    public function has($key)
+    {
+        return isset($this->elements[$key]);
+    }
+
     public function clear()
     {
-        $this->elements = array();
+        $this->elements = [];
     }
 
     public function count()

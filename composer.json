@@ -1,46 +1,55 @@
 {
-    "name": "denisleemkuil/besimplesoapbundlesymfony3",
-    "type": "symfony-bundle",
-    "description": "Build and consume SOAP and WSDL based web services with Symfony2 & 3",
-    "keywords": [ "soap", "soap-bundle" ],
-    "homepage": "https://github.com/BeSimple/BeSimpleSoapBundle",
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Francis Besset",
-            "email": "francis.besset@gmail.com"
-        },
-        {
-            "name": "Christian Kerl",
-            "email": "christian-kerl@web.de"
-        },
-        {
-            "name": "Andreas Schamberger",
-            "email": "mail@andreass.net"
-        }
-    ],
-    "require": {
-        "php": ">=5.4.0",
-        "ext-soap": "*",
-        "besimple/soap-common": "0.3.*",
-        "besimple/soap-wsdl": "0.3.*",
-        "ass/xmlsecurity": "~1.0",
-        "symfony/framework-bundle": "~2.6|~3.0|~4.0",
-        "symfony/twig-bundle": "~2.6|~3.0",
-        "zendframework/zend-mime": "2.1.*"
+  "name": "turko/besimplesoapbundle",
+  "type": "symfony-bundle",
+  "description": "Build and consume SOAP and WSDL based web services with Symfony3 & 4",
+  "keywords": [
+    "soap",
+    "soap-bundle"
+  ],
+  "homepage": "https://github.com/turko/BeSimpleSoapBundle",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Francis Besset",
+      "email": "francis.besset@gmail.com"
     },
-    "suggest": {
-        "besimple/soap-client": "0.2.*",
-        "besimple/soap-server": "0.2.*"
+    {
+      "name": "Christian Kerl",
+      "email": "christian-kerl@web.de"
     },
-    "autoload": {
-        "psr-0": { "BeSimple\\SoapBundle": "" }
+    {
+      "name": "Andreas Schamberger",
+      "email": "mail@andreass.net"
     },
-    "target-dir": "BeSimple/SoapBundle",
-    "minimum-stability": "dev",
-    "extra": {
-        "branch-alias": {
-            "dev-master": "0.3-dev"
-        }
+    {
+      "name": "Marcos Fadul",
+      "email": "marcos@polargold.de"
     }
+  ],
+  "require": {
+    "php": ">=7.0.0",
+    "ext-soap": "*",
+    "besimple/soap-common": "0.3.*",
+    "besimple/soap-wsdl": "0.3.*",
+    "ass/xmlsecurity": "~1.0",
+    "symfony/framework-bundle": "~2.6|~3.0|~4.0",
+    "symfony/twig-bundle": "~2.6|~3.0",
+    "zendframework/zend-mime": "2.1.*"
+  },
+  "suggest": {
+    "besimple/soap-client": "0.2.*",
+    "besimple/soap-server": "0.2.*"
+  },
+  "autoload": {
+    "psr-0": {
+      "BeSimple\\SoapBundle": ""
+    }
+  },
+  "target-dir": "BeSimple/SoapBundle",
+  "minimum-stability": "dev",
+  "extra": {
+    "branch-alias": {
+      "dev-master": "1.0-dev"
+    }
+  }
 }

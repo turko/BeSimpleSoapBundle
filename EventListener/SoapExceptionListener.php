@@ -33,15 +33,23 @@ class SoapExceptionListener extends ExceptionListener
      *  The parent class needs and instance of `Psr\Log\LoggerInterface` from Symfony 2.2,
      *  before logger is an instance of `Symfony\Component\HttpKernel\Log\LoggerInterface`.
      *
-     * @param ContainerInterface $container  A ContainerInterface instance
-     * @param string             $controller The controller name to call
-     * @param LoggerInterface    $logger     A logger instance
+     * @param ContainerInterface $container A ContainerInterface instance
+     * @param string $controller The controller name to call
+     * @param LoggerInterface $logger A logger instance
      */
     public function __construct(ContainerInterface $container, $controller, $logger)
     {
         parent::__construct($controller, $logger);
 
         $this->container = $container;
+    }
+
+    public static function getSubscribedEvents()
+    {
+        return [
+            // Must be called before ExceptionListener of HttpKernel component
+            KernelEvents::EXCEPTION => ['onKernelException', -64],
+        ];
     }
 
     public function onKernelException(GetResponseForExceptionEvent $event)
@@ -51,9 +59,11 @@ class SoapExceptionListener extends ExceptionListener
         }
 
         $request = $event->getRequest();
-        if (!in_array($request->getRequestFormat(), array('soap', 'xml'))) {
+        if (!in_array($request->getRequestFormat(), ['soap', 'xml'])) {
             return;
-        } elseif ('xml' === $request->getRequestFormat() && '_webservice_call' !== $request->attributes->get('_route')) {
+        } elseif ('xml' === $request->getRequestFormat() && '_webservice_call' !== $request->attributes->get(
+                '_route'
+            )) {
             return;
         }
 
@@ -75,13 +85,5 @@ class SoapExceptionListener extends ExceptionListener
         }
 
         parent::onKernelException($event);
-    }
-
-    public static function getSubscribedEvents()
-    {
-        return array(
-            // Must be called before ExceptionListener of HttpKernel component
-            KernelEvents::EXCEPTION => array('onKernelException', -64),
-        );
     }
 }

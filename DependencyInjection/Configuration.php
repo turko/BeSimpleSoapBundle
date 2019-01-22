@@ -23,10 +23,10 @@ use Symfony\Component\Config\Definition\Builder\TreeBuilder;
  */
 class Configuration
 {
-    private $cacheTypes = array('none', 'disk', 'memory', 'disk_memory');
-    private $proxyAuth = array('basic', 'ntlm');
-    private $authType = array('basic', 'digest');
-    private $soapType = array('soap_1_1', 'soap_1_2');
+    private $cacheTypes = ['none', 'disk', 'memory', 'disk_memory'];
+    private $proxyAuth = ['basic', 'ntlm'];
+    private $authType = ['basic', 'digest'];
+    private $soapType = ['soap_1_1', 'soap_1_2'];
 
     /**
      * Generates the configuration tree.

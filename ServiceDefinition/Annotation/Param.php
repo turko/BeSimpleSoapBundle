@@ -24,24 +24,24 @@ class Param extends Configuration implements TypedElementInterface
         return $this->value;
     }
 
-    public function getPhpType()
-    {
-        return $this->phpType;
-    }
-
-    public function getXmlType()
-    {
-        return $this->xmlType;
-    }
-
     public function setValue($value)
     {
         $this->value = $value;
     }
 
+    public function getPhpType()
+    {
+        return $this->phpType;
+    }
+
     public function setPhpType($phpType)
     {
         $this->phpType = $phpType;
+    }
+
+    public function getXmlType()
+    {
+        return $this->xmlType;
     }
 
     public function setXmlType($xmlType)

@@ -2,24 +2,27 @@
 
 namespace BeSimple\SoapBundle\Soap;
 
+use BeSimple\SoapClient\SoapClientBuilder as BaseSoapClientBuilder;
 use BeSimple\SoapCommon\Classmap;
 use BeSimple\SoapCommon\Converter\TypeConverterCollection;
-use BeSimple\SoapClient\SoapClientBuilder as BaseSoapClientBuilder;
 
 class SoapClientBuilder extends BaseSoapClientBuilder
 {
     protected $soapClient;
 
-    public function __construct($wsdl, array $options, Classmap $classmap = null, TypeConverterCollection $converters = null)
-    {
+    public function __construct(
+        $wsdl,
+        array $options,
+        Classmap $classmap = null,
+        TypeConverterCollection $converters = null
+    ) {
         parent::__construct();
 
         $this->checkOptions($options);
 
         $this
             ->withWsdl($wsdl)
-            ->withTrace($options['debug'])
-        ;
+            ->withTrace($options['debug']);
 
         if (isset($options['options'])) {
             $this->soapOptions = array_merge($this->soapOptions, $options['options']);
@@ -53,16 +56,16 @@ class SoapClientBuilder extends BaseSoapClientBuilder
 
     protected function checkOptions(array $options)
     {
-        $checkOptions = array(
-            'debug'      => false,
+        $checkOptions = [
+            'debug' => false,
             'cache_type' => null,
             'exceptions' => true,
             'user_agent' => 'BeSimpleSoap',
-            'options'    => array()
-        );
+            'options' => []
+        ];
 
         // check option names and live merge, if errors are encountered Exception will be thrown
-        $invalid   = array();
+        $invalid = [];
         $isInvalid = false;
         foreach ($options as $key => $value) {
             if (!array_key_exists($key, $checkOptions)) {
@@ -72,11 +75,13 @@ class SoapClientBuilder extends BaseSoapClientBuilder
         }
 
         if ($isInvalid) {
-            throw new \InvalidArgumentException(sprintf(
-                'The "%s" class does not support the following options: "%s".',
-                get_class($this),
-                implode('\', \'', $invalid)
-            ));
+            throw new \InvalidArgumentException(
+                sprintf(
+                    'The "%s" class does not support the following options: "%s".',
+                    get_class($this),
+                    implode('\', \'', $invalid)
+                )
+            );
         }
     }
 }

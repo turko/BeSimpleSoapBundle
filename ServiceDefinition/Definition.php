@@ -25,7 +25,7 @@ class Definition extends BaseDefinition
     {
         $this->typeRepository = $typeRepository;
 
-        $this->setOptions(array());
+        $this->setOptions([]);
     }
 
     public function setName($name)
