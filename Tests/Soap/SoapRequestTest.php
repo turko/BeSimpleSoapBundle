@@ -13,18 +13,17 @@
 namespace BeSimple\SoapBundle\Tests\Soap;
 
 use BeSimple\SoapBundle\Soap\SoapRequest;
+use PHPUnit\Framework\TestCase;
 
 /**
  * UnitTest for \BeSimple\SoapBundle\Soap\SoapRequest.
  *
  * @author Christian Kerl <christian-kerl@web.de>
  */
-class SoapRequestTest extends \PHPUnit_Framework_TestCase
+class SoapRequestTest extends TestCase
 {
     public function testMtomMessage()
     {
-        $this->markTestSkipped('Skip because I\'m not sure that SoapRequest is used in a HTTP Request process.');
-
         $content = $this->loadRequestContentFixture('mtom/simple.txt');
 
         $request = new SoapRequest([], [], [], [], [], [], $content);

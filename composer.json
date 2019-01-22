@@ -1,5 +1,5 @@
 {
-  "name": "turko/besimplesoapbundle",
+  "name": "turko/soap-bundle",
   "type": "symfony-bundle",
   "description": "Build and consume SOAP and WSDL based web services with Symfony3 & 4",
   "keywords": [
@@ -29,12 +29,17 @@
   "require": {
     "php": ">=7.0.0",
     "ext-soap": "*",
-    "besimple/soap-common": "0.3.*",
-    "besimple/soap-wsdl": "0.3.*",
+    "besimple/soap-common": "0.2.*",
+    "besimple/soap-wsdl": "0.2.*",
     "ass/xmlsecurity": "~1.0",
-    "symfony/framework-bundle": "~2.6|~3.0|~4.0",
-    "symfony/twig-bundle": "~2.6|~3.0",
-    "zendframework/zend-mime": "2.1.*"
+    "symfony/framework-bundle": "~3.0|~4.0",
+    "symfony/twig-bundle": "~3.0",
+    "zendframework/zend-mime": "2.4.*"
+  },
+  "require-dev": {
+    "roave/security-advisories": "dev-master",
+    "zendframework/zend-mail": "2.4.*",
+    "phpunit/phpunit": "6.5.x-dev"
   },
   "suggest": {
     "besimple/soap-client": "0.2.*",
@@ -45,8 +50,11 @@
       "BeSimple\\SoapBundle": ""
     }
   },
+  "replace": {
+    "besimple/soap-bundle": "*"
+  },
   "target-dir": "BeSimple/SoapBundle",
-  "minimum-stability": "dev",
+  "minimum-stability": "stable",
   "extra": {
     "branch-alias": {
       "dev-master": "1.0-dev"
