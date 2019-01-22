@@ -23,14 +23,14 @@ class Result extends Configuration implements TypedElementInterface
         return $this->phpType;
     }
 
-    public function getXmlType()
-    {
-        return $this->xmlType;
-    }
-
     public function setPhpType($phpType)
     {
         $this->phpType = $phpType;
+    }
+
+    public function getXmlType()
+    {
+        return $this->xmlType;
     }
 
     public function setXmlType($xmlType)

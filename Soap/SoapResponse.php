@@ -11,7 +11,6 @@
 namespace BeSimple\SoapBundle\Soap;
 
 use BeSimple\SoapBundle\Util\Collection;
-
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -39,6 +38,13 @@ class SoapResponse extends Response
         $this->setReturnValue($returnValue);
     }
 
+    public function setReturnValue($value)
+    {
+        $this->soapReturnValue = $value;
+
+        return $this;
+    }
+
     /**
      * @param SoapHeader $soapHeader
      */
@@ -53,13 +59,6 @@ class SoapResponse extends Response
     public function getSoapHeaders()
     {
         return $this->soapHeaders;
-    }
-
-    public function setReturnValue($value)
-    {
-        $this->soapReturnValue = $value;
-
-        return $this;
     }
 
     public function getReturnValue()

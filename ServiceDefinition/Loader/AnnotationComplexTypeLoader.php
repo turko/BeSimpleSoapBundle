@@ -24,14 +24,14 @@ use BeSimple\SoapBundle\Util\Collection;
  */
 class AnnotationComplexTypeLoader extends AnnotationClassLoader
 {
-    private $aliasClass       = 'BeSimple\SoapBundle\ServiceDefinition\Annotation\Alias';
+    private $aliasClass = 'BeSimple\SoapBundle\ServiceDefinition\Annotation\Alias';
     private $complexTypeClass = 'BeSimple\SoapBundle\ServiceDefinition\Annotation\ComplexType';
 
     /**
      * Loads a ServiceDefinition from annotations from a class.
      *
      * @param string $class A class name
-     * @param string $type  The resource type
+     * @param string $type The resource type
      *
      * @return ServiceDefinition A ServiceDefinition instance
      *
@@ -43,7 +43,7 @@ class AnnotationComplexTypeLoader extends AnnotationClassLoader
             throw new \InvalidArgumentException(sprintf('Class "%s" does not exist.', $class));
         }
 
-        $annotations = array();
+        $annotations = [];
 
         $class = new \ReflectionClass($class);
         if ($alias = $this->reader->getClassAnnotation($class, $this->aliasClass)) {
@@ -69,8 +69,8 @@ class AnnotationComplexTypeLoader extends AnnotationClassLoader
     /**
      * Returns true if this class supports the given resource.
      *
-     * @param mixed  $resource A resource
-     * @param string $type     The resource type
+     * @param mixed $resource A resource
+     * @param string $type The resource type
      *
      * @return Boolean True if this class supports the given resource, false otherwise
      */

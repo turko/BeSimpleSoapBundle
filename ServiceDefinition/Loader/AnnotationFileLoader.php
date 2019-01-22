@@ -13,7 +13,6 @@
 namespace BeSimple\SoapBundle\ServiceDefinition\Loader;
 
 use BeSimple\SoapBundle\ServiceDefinition\ServiceDefinition;
-
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Config\Loader\FileLoader;
 
@@ -33,9 +32,9 @@ class AnnotationFileLoader extends FileLoader
      * Constructor.
      *
      * @param AnnotationClassLoader $loader An AnnotationClassLoader instance
-     * @param string|array          $paths  A path or an array of paths where to look for resources
+     * @param string|array $paths A path or an array of paths where to look for resources
      */
-    public function __construct(FileLocator $locator, AnnotationClassLoader $loader, $paths = array())
+    public function __construct(FileLocator $locator, AnnotationClassLoader $loader, $paths = [])
     {
         if (!function_exists('token_get_all')) {
             throw new \RuntimeException('The Tokenizer extension is required for the routing annotation loaders.');
@@ -70,14 +69,17 @@ class AnnotationFileLoader extends FileLoader
     /**
      * Returns true if this class supports the given resource.
      *
-     * @param mixed  $resource A resource
-     * @param string $type     The resource type
+     * @param mixed $resource A resource
+     * @param string $type The resource type
      *
      * @return Boolean True if this class supports the given resource, false otherwise
      */
     public function supports($resource, $type = null)
     {
-        return is_string($resource) && 'php' === pathinfo($resource, PATHINFO_EXTENSION) && (!$type || 'annotation' === $type);
+        return is_string($resource) && 'php' === pathinfo(
+                $resource,
+                PATHINFO_EXTENSION
+            ) && (!$type || 'annotation' === $type);
     }
 
     /**
@@ -89,16 +91,16 @@ class AnnotationFileLoader extends FileLoader
      */
     protected function findClass($file)
     {
-        $class     = false;
+        $class = false;
         $namespace = false;
-        $tokens    = token_get_all(file_get_contents($file));
+        $tokens = token_get_all(file_get_contents($file));
         while ($token = array_shift($tokens)) {
             if (!is_array($token)) {
                 continue;
             }
 
             if (true === $class && T_STRING === $token[0]) {
-                return $namespace.'\\'.$token[1];
+                return $namespace . '\\' . $token[1];
             }
 
             if (true === $namespace && T_STRING === $token[0]) {
@@ -106,7 +108,7 @@ class AnnotationFileLoader extends FileLoader
                 do {
                     $namespace .= $token[1];
                     $token = array_shift($tokens);
-                } while ($tokens && is_array($token) && in_array($token[0], array(T_NS_SEPARATOR, T_STRING)));
+                } while ($tokens && is_array($token) && in_array($token[0], [T_NS_SEPARATOR, T_STRING]));
             }
 
             if (T_CLASS === $token[0]) {

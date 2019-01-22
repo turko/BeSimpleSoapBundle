@@ -48,7 +48,7 @@ class AnnotationClassLoader extends Loader
      * Loads a ServiceDefinition from annotations from a class.
      *
      * @param string $class A class name
-     * @param string $type  The resource type
+     * @param string $type The resource type
      *
      * @return \BeSimple\SoapBundle\ServiceDefinition\ServiceDefinition A ServiceDefinition instance
      *
@@ -60,10 +60,10 @@ class AnnotationClassLoader extends Loader
             throw new \InvalidArgumentException(sprintf('Class "%s" does not exist.', $class));
         }
 
-        $class      = new \ReflectionClass($class);
+        $class = new \ReflectionClass($class);
         $definition = new Definition\Definition($this->typeRepository);
 
-        $sharedHeaders = array();
+        $sharedHeaders = [];
         foreach ($this->reader->getClassAnnotations($class) as $annotation) {
             if ($annotation instanceof Annotation\Header) {
                 $sharedHeaders[$annotation->getValue()] = $this->loadType($annotation->getPhpType());
@@ -71,10 +71,10 @@ class AnnotationClassLoader extends Loader
         }
 
         foreach ($class->getMethods() as $method) {
-            $serviceHeaders   = $sharedHeaders;
-            $serviceArguments = array();
-            $serviceMethod    =
-            $serviceReturn    = null;
+            $serviceHeaders = $sharedHeaders;
+            $serviceArguments = [];
+            $serviceMethod =
+            $serviceReturn = null;
 
             foreach ($this->reader->getMethodAnnotations($method) as $annotation) {
                 if ($annotation instanceof Annotation\Header) {
@@ -126,18 +126,26 @@ class AnnotationClassLoader extends Loader
     }
 
     /**
-     * @param \ReflectionMethod $method
-     * @param \BeSimple\SoapBundle\ServiceDefinition\Annotation\Method $annotation
+     * Returns true if this class supports the given resource.
      *
-     * @return string
+     * @param mixed $resource A resource
+     * @param string $type The resource type
+     *
+     * @return Boolean True if this class supports the given resource, false otherwise
      */
-    private function getController(\ReflectionClass $class, \ReflectionMethod $method, Annotation\Method $annotation)
+    public function supports($resource, $type = null)
     {
-        if(null !== $annotation->getService()) {
-            return $annotation->getService() . ':' . $method->name;
-        } else {
-            return $class->name . '::' . $method->name;
-        }
+        return is_string($resource) && preg_match(
+                '/^(?:\\\\?[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*)+$/',
+                $resource
+            ) && (!$type || 'annotation' === $type);
+    }
+
+    /**
+     * @return null
+     */
+    public function getResolver()
+    {
     }
 
     private function loadType($phpType)
@@ -165,22 +173,17 @@ class AnnotationClassLoader extends Loader
     }
 
     /**
-     * Returns true if this class supports the given resource.
+     * @param \ReflectionMethod $method
+     * @param \BeSimple\SoapBundle\ServiceDefinition\Annotation\Method $annotation
      *
-     * @param mixed  $resource A resource
-     * @param string $type     The resource type
-     *
-     * @return Boolean True if this class supports the given resource, false otherwise
+     * @return string
      */
-    public function supports($resource, $type = null)
+    private function getController(\ReflectionClass $class, \ReflectionMethod $method, Annotation\Method $annotation)
     {
-        return is_string($resource) && preg_match('/^(?:\\\\?[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*)+$/', $resource) && (!$type || 'annotation' === $type);
-    }
-
-    /**
-     * @return null
-     */
-    public function getResolver()
-    {
+        if (null !== $annotation->getService()) {
+            return $annotation->getService() . ':' . $method->name;
+        } else {
+            return $class->name . '::' . $method->name;
+        }
     }
 }

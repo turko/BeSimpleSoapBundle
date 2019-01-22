@@ -10,9 +10,9 @@
 
 namespace BeSimple\SoapBundle\DependencyInjection\Compiler;
 
-use Symfony\Component\DependencyInjection\Reference;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Reference;
 
 /**
  * Adds tagged besimple.soap.definition.loader services to ebservice.definition.resolver service
@@ -30,7 +30,7 @@ class WebServiceResolverPass implements CompilerPassInterface
         $definition = $container->getDefinition('besimple.soap.definition.loader.resolver');
 
         foreach ($container->findTaggedServiceIds('besimple.soap.definition.loader') as $id => $attributes) {
-            $definition->addMethodCall('addLoader', array(new Reference($id)));
+            $definition->addMethodCall('addLoader', [new Reference($id)]);
         }
     }
 }

@@ -44,11 +44,16 @@ class ServiceBinder
      * @param MessageBinderInterface $requestMessageBinder
      * @param MessageBinderInterface $responseMessageBinder
      */
-    public function __construct(Definition $definition, MessageBinderInterface $requestHeaderMessageBinder, MessageBinderInterface $requestMessageBinder, MessageBinderInterface $responseMessageBinder) {
+    public function __construct(
+        Definition $definition,
+        MessageBinderInterface $requestHeaderMessageBinder,
+        MessageBinderInterface $requestMessageBinder,
+        MessageBinderInterface $responseMessageBinder
+    ) {
         $this->definition = $definition;
 
         $this->requestHeaderMessageBinder = $requestHeaderMessageBinder;
-        $this->requestMessageBinder       = $requestMessageBinder;
+        $this->requestMessageBinder = $requestMessageBinder;
 
         $this->responseMessageBinder = $responseMessageBinder;
     }
@@ -87,7 +92,11 @@ class ServiceBinder
         $headerDefinition = $methodDefinition->getHeader($header);
 
         $this->requestHeaderMessageBinder->setHeader($header);
-        $data = $this->requestHeaderMessageBinder->processMessage($methodDefinition, $data, $this->definition->getTypeRepository());
+        $data = $this->requestHeaderMessageBinder->processMessage(
+            $methodDefinition,
+            $data,
+            $this->definition->getTypeRepository()
+        );
 
         return new SoapHeader($this->definition->getNamespace(), $headerDefinition->getName(), $data);
     }
@@ -103,8 +112,12 @@ class ServiceBinder
         $methodDefinition = $this->definition->getMethod($method);
 
         return array_merge(
-            array('_controller' => $methodDefinition->getController()),
-            $this->requestMessageBinder->processMessage($methodDefinition, $arguments, $this->definition->getTypeRepository())
+            ['_controller' => $methodDefinition->getController()],
+            $this->requestMessageBinder->processMessage(
+                $methodDefinition,
+                $arguments,
+                $this->definition->getTypeRepository()
+            )
         );
     }
 
@@ -118,6 +131,10 @@ class ServiceBinder
     {
         $methodDefinition = $this->definition->getMethod($name);
 
-        return $this->responseMessageBinder->processMessage($methodDefinition, $return, $this->definition->getTypeRepository());
+        return $this->responseMessageBinder->processMessage(
+            $methodDefinition,
+            $return,
+            $this->definition->getTypeRepository()
+        );
     }
 }

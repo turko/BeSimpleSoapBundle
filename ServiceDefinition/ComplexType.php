@@ -26,19 +26,14 @@ class ComplexType
         return $this->name;
     }
 
-    public function getValue()
-    {
-        return $this->value;
-    }
-
-    public function isNillable()
-    {
-        return $this->isNillable;
-    }
-
     public function setName($name)
     {
         $this->name = $name;
+    }
+
+    public function getValue()
+    {
+        return $this->value;
     }
 
     public function setValue($value)
@@ -46,8 +41,13 @@ class ComplexType
         $this->value = $value;
     }
 
+    public function isNillable()
+    {
+        return $this->isNillable;
+    }
+
     public function setNillable($isNillable)
     {
-        $this->isNillable = (bool) $isNillable;
+        $this->isNillable = (bool)$isNillable;
     }
 }

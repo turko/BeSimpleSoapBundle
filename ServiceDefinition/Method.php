@@ -37,6 +37,6 @@ class Method extends BaseMethod
 
     public function getVersions()
     {
-        return array(\SOAP_1_1);
+        return [\SOAP_1_1];
     }
 }

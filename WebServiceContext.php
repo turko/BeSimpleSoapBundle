@@ -13,8 +13,8 @@ namespace BeSimple\SoapBundle;
 
 use BeSimple\SoapBundle\ServiceBinding\ServiceBinder;
 use BeSimple\SoapCommon\Converter\TypeConverterCollection;
-use BeSimple\SoapWsdl\Dumper\Dumper;
 use BeSimple\SoapServer\SoapServerBuilder;
+use BeSimple\SoapWsdl\Dumper\Dumper;
 use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\Config\Loader\LoaderInterface;
 
@@ -39,28 +39,6 @@ class WebServiceContext
         $this->options = $options;
     }
 
-    public function getServiceDefinition()
-    {
-        if (null === $this->serviceDefinition) {
-            $cache = new ConfigCache(sprintf('%s/%s.definition.php', $this->options['cache_dir'], $this->options['name']), $this->options['debug']);
-            if ($cache->isFresh()) {
-                $this->serviceDefinition = include (string) $cache->getPath();
-            } else {
-                if (!$this->loader->supports($this->options['resource'], $this->options['resource_type'])) {
-                    throw new \LogicException(sprintf('Cannot load "%s" (%s)', $this->options['resource'], $this->options['resource_type']));
-                }
-
-                $this->serviceDefinition = $this->loader->load($this->options['resource'], $this->options['resource_type']);
-                $this->serviceDefinition->setName($this->options['name']);
-                $this->serviceDefinition->setNamespace($this->options['namespace']);
-
-                $cache->write('<?php return unserialize('.var_export(serialize($this->serviceDefinition), true).');');
-            }
-        }
-
-        return $this->serviceDefinition;
-    }
-
     public function getWsdlFileContent($endpoint = null)
     {
         return file_get_contents($this->getWsdlFile($endpoint));
@@ -68,21 +46,53 @@ class WebServiceContext
 
     public function getWsdlFile($endpoint = null)
     {
-        $file      = sprintf ('%s/%s.%s.wsdl', $this->options['cache_dir'], $this->options['name'], md5($endpoint));
+        $file = sprintf('%s/%s.%s.wsdl', $this->options['cache_dir'], $this->options['name'], md5($endpoint));
         $cache = new ConfigCache($file, $this->options['debug']);
 
-        if(!$cache->isFresh()) {
+        if (!$cache->isFresh()) {
             $definition = $this->getServiceDefinition();
 
             if ($endpoint) {
                 $definition->setOption('location', $endpoint);
             }
 
-            $dumper = new Dumper($definition, array('stylesheet' => $this->options['wsdl_stylesheet']));
+            $dumper = new Dumper($definition, ['stylesheet' => $this->options['wsdl_stylesheet']]);
             $cache->write($dumper->dump());
         }
 
-        return (string) $cache->getPath();
+        return (string)$cache->getPath();
+    }
+
+    public function getServiceDefinition()
+    {
+        if (null === $this->serviceDefinition) {
+            $cache = new ConfigCache(
+                sprintf('%s/%s.definition.php', $this->options['cache_dir'], $this->options['name']),
+                $this->options['debug']
+            );
+            if ($cache->isFresh()) {
+                $this->serviceDefinition = include (string)$cache->getPath();
+            } else {
+                if (!$this->loader->supports($this->options['resource'], $this->options['resource_type'])) {
+                    throw new \LogicException(
+                        sprintf('Cannot load "%s" (%s)', $this->options['resource'], $this->options['resource_type'])
+                    );
+                }
+
+                $this->serviceDefinition = $this->loader->load(
+                    $this->options['resource'],
+                    $this->options['resource_type']
+                );
+                $this->serviceDefinition->setName($this->options['name']);
+                $this->serviceDefinition->setNamespace($this->options['namespace']);
+
+                $cache->write(
+                    '<?php return unserialize(' . var_export(serialize($this->serviceDefinition), true) . ');'
+                );
+            }
+        }
+
+        return $this->serviceDefinition;
     }
 
     public function getServiceBinder()
@@ -105,8 +115,7 @@ class WebServiceContext
             $this->serverBuilder = SoapServerBuilder::createWithDefaults()
                 ->withWsdl($this->getWsdlFile())
                 ->withClassmap($this->getServiceDefinition()->getTypeRepository()->getClassmap())
-                ->withTypeConverters($this->converters)
-            ;
+                ->withTypeConverters($this->converters);
 
             if (null !== $this->options['cache_type']) {
                 $this->serverBuilder->withWsdlCache($this->options['cache_type']);

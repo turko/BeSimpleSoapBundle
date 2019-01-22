@@ -26,14 +26,14 @@ class RpcLiteralRequestMessageBinder implements MessageBinderInterface
 {
     protected $typeRepository;
 
-    private $messageRefs = array();
+    private $messageRefs = [];
 
     public function processMessage(Method $messageDefinition, $message, TypeRepository $typeRepository)
     {
         $this->typeRepository = $typeRepository;
 
-        $result = array();
-        $i      = 0;
+        $result = [];
+        $i = 0;
 
         foreach ($messageDefinition->getInput()->all() as $argument) {
             if (isset($message[$i])) {
@@ -53,7 +53,7 @@ class RpcLiteralRequestMessageBinder implements MessageBinderInterface
         $type = $this->typeRepository->getType($phpType);
         if ($type instanceof ArrayOfType) {
             $isArray = true;
-            $array = array();
+            $array = [];
 
             $type = $this->typeRepository->getType($type->get('item')->getType());
         }
@@ -70,7 +70,7 @@ class RpcLiteralRequestMessageBinder implements MessageBinderInterface
 
                     // See https://github.com/BeSimple/BeSimpleSoapBundle/issues/29
                     if (in_array('BeSimple\SoapCommon\Type\AbstractKeyValue', class_parents($phpType))) {
-                        $assocArray = array();
+                        $assocArray = [];
                         foreach ($array as $keyValue) {
                             $assocArray[$keyValue->getKey()] = $keyValue->getValue();
                         }
@@ -114,7 +114,10 @@ class RpcLiteralRequestMessageBinder implements MessageBinderInterface
                 $messageBinder->writeProperty($property, $value);
             } elseif (!$type->isNillable()) {
                 // @TODO use xmlType instead of phpType
-                throw new \SoapFault('SOAP_ERROR_COMPLEX_TYPE', sprintf('"%s:%s" cannot be null.', ucfirst($phpType), $type->getName()));
+                throw new \SoapFault(
+                    'SOAP_ERROR_COMPLEX_TYPE',
+                    sprintf('"%s:%s" cannot be null.', ucfirst($phpType), $type->getName())
+                );
             }
         }
 

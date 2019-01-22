@@ -20,8 +20,8 @@ class TypeRepository
 {
     const ARRAY_SUFFIX = '[]';
 
-    private $xmlNamespaces  = array();
-    private $defaultTypeMap = array();
+    private $xmlNamespaces = [];
+    private $defaultTypeMap = [];
 
     public function addXmlNamespace($prefix, $url)
     {
@@ -41,14 +41,9 @@ class TypeRepository
         $this->defaultTypeMap[$phpType] = $xmlType;
     }
 
-    public function getXmlTypeMapping($phpType)
-    {
-        return isset($this->defaultTypeMap[$phpType]) ? $this->defaultTypeMap[$phpType] : null;
-    }
-
     public function fixTypeInformation(ServiceDefinition $definition)
     {
-        foreach($definition->getAllTypes() as $type) {
+        foreach ($definition->getAllTypes() as $type) {
             $phpType = $type->getPhpType();
             $xmlType = $type->getXmlType();
 
@@ -62,5 +57,10 @@ class TypeRepository
 
             $type->setXmlType($xmlType);
         }
+    }
+
+    public function getXmlTypeMapping($phpType)
+    {
+        return isset($this->defaultTypeMap[$phpType]) ? $this->defaultTypeMap[$phpType] : null;
     }
 }

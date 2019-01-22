@@ -26,7 +26,7 @@ class RpcLiteralResponseMessageBinder implements MessageBinderInterface
 {
     protected $typeRepository;
 
-    private $messageRefs = array();
+    private $messageRefs = [];
 
     public function processMessage(Method $messageDefinition, $message, TypeRepository $typeRepository)
     {
@@ -50,11 +50,14 @@ class RpcLiteralResponseMessageBinder implements MessageBinderInterface
             $phpType = $type->getPhpType();
 
             if ($isArray) {
-                $array = array();
+                $array = [];
 
                 // See https://github.com/BeSimple/BeSimpleSoapBundle/issues/29
-                if (is_array($message) && in_array('BeSimple\SoapCommon\Type\AbstractKeyValue', class_parents($phpType))) {
-                    $keyValue = array();
+                if (is_array($message) && in_array(
+                        'BeSimple\SoapCommon\Type\AbstractKeyValue',
+                        class_parents($phpType)
+                    )) {
+                    $keyValue = [];
                     foreach ($message as $key => $value) {
                         $keyValue[] = new $phpType($key, $value);
                     }
@@ -85,7 +88,9 @@ class RpcLiteralResponseMessageBinder implements MessageBinderInterface
         $this->messageRefs[$hash] = $message;
 
         if (!$message instanceof $phpType) {
-            throw new \InvalidArgumentException(sprintf('The instance class must be "%s", "%s" given.', $phpType, get_class($message)));
+            throw new \InvalidArgumentException(
+                sprintf('The instance class must be "%s", "%s" given.', $phpType, get_class($message))
+            );
         }
 
         $messageBinder = new MessageBinder($message);

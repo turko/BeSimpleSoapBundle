@@ -24,19 +24,14 @@ class ComplexType extends Configuration
         return $this->name;
     }
 
-    public function getValue()
-    {
-        return $this->value;
-    }
-
-    public function isNillable()
-    {
-        return $this->isNillable;
-    }
-
     public function setName($name)
     {
         $this->name = $name;
+    }
+
+    public function getValue()
+    {
+        return $this->value;
     }
 
     public function setValue($value)
@@ -44,9 +39,14 @@ class ComplexType extends Configuration
         $this->value = $value;
     }
 
+    public function isNillable()
+    {
+        return $this->isNillable;
+    }
+
     public function setNillable($isNillable)
     {
-        $this->isNillable = (bool) $isNillable;
+        $this->isNillable = (bool)$isNillable;
     }
 
     public function getAliasName()
