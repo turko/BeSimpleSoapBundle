@@ -33,6 +33,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 class SoapWebServiceController extends Controller
 {
     use ContainerAwareTrait;
+
     /**
      * @var \SoapServer
      */

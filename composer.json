@@ -20,9 +20,9 @@
         }
     ],
     "require": {
-        "php": ">=5.6.0",
+        "php": ">=5.4.0",
         "ext-soap": "*",
-		"besimple/soap-common": "0.3.*",
+        "besimple/soap-common": "0.3.*",
         "besimple/soap-wsdl": "0.3.*",
         "ass/xmlsecurity": "~1.0",
         "symfony/framework-bundle": "~2.6|~3.0|~4.0",
@@ -37,6 +37,7 @@
         "psr-0": { "BeSimple\\SoapBundle": "" }
     },
     "target-dir": "BeSimple/SoapBundle",
+    "minimum-stability": "dev",
     "extra": {
         "branch-alias": {
             "dev-master": "0.3-dev"
